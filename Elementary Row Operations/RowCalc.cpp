@@ -10,7 +10,7 @@ void showMatrixEqn(const vector<vector<int>>& data, int x, int y) {
 	//show the matrix in normal form
 	for (int i = 0; i < data.size(); i++) {
 		for (int j = 0; j < data[i].size(); j++) {
-			cout << setw(4) << data[j][i];
+			cout << setw(4) << data[i][j];
 		}
 		cout << endl;
 	}
@@ -65,8 +65,10 @@ int main() {
 	uniform_int_distribution<int> dist(1, 20);
 
 	int vars, eqns; // x and y
-	cout << "variables: ";
-	cin >> vars; cout << endl; vars++; // add in for the right side of = sign
+	cout << "variables: \n";
+	//cin >> vars; cout << endl; vars++; // add in for the right side of = sign
+	vars = 4;
+	//cin.ignore();
 	eqns = vars - 1; // height spacing up/down, each one is an equation
 
 	vector<vector<int>> data(eqns, vector<int>(vars));
@@ -109,36 +111,41 @@ int main() {
 		istringstream stream(input);
 		while (stream >> commands[count++]) {}
 		if (isInt(commands[0], firstRow)) {
-			bool isMult;
+			firstRow--; // convert to 0-based index
+
 			// we are multiplying/dividing a matrix
-			if (commands[1] == "div") {
-				if (!isInt(commands[1])) { cout << "bad command"; continue; }
-				isMult = false;
-			}
-			else if (commands[1] == "mult") {
-				if (!isInt(commands[1])) { cout << "bad command"; continue; }
-				isMult = true;
-			}
-			else { cout << "bad something"; continue; }
+			bool isMult = (commands[1] == "div" ? false : true);
+			
 			int value;
-			if (isInt(commands[2], value)) { cout << "bad number"; continue; }
+			if (!isInt(commands[2], value)) { cout << "bad number: " << commands[2] << endl; continue; }
 			
 			float valueF = isMult ? (float)value : 1.0 / (float)value;
 
 			for (int i = 0; i < vars; i++) {
-				data[firstRow][vars] = (int)( (float)data[firstRow][vars] * valueF );
+				data[firstRow][i] = (int)( (float)data[firstRow][i] * valueF );
 			}
 			
 		} else {
+			int first, second;
+			if (!isInt(commands[1], first) || !isInt(commands[2], second)) {
+				cout << "bad row numbers\n";
+				continue;
+			}
 			// we are doing something between matricies, or swapping matricies
 			if (commands[0] == "swap") {
-				int first, second;
-				if (!isInt(commands[1], first) || !isInt(commands[2], second)) {
-					cout << "bad row numbers for swap\n";
-					continue;
-				}
+				
 				swap(data[first], data[second]);
 			}
+			else if (commands[0] == "add") {
+				for (int i = 0; i < eqns; i++) {
+					data[first][i] += data[second][i];
+				}
+			}
+			else if (commands[0] == "sub") {
+				data[first][i] -= data[second][i];
+			}
+			
 		}
+		showMatrixEqn(data, eqns, vars);
 	}
 }
