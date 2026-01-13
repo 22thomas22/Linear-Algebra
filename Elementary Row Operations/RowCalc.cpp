@@ -133,18 +133,15 @@ int main() {
 			}
 			// we are doing something between matricies, or swapping matricies
 			if (commands[0] == "swap") {
-				
 				swap(data[first], data[second]);
-			}
-			else if (commands[0] == "add") {
+			} else {
 				for (int i = 0; i < eqns; i++) {
-					data[first][i] += data[second][i];
+					if (commands[0] == "add")
+						data[first][i] += data[second][i];
+					if(commands[0] == "sub")
+						data[first][i] -= data[second][i];
 				}
 			}
-			else if (commands[0] == "sub") {
-				data[first][i] -= data[second][i];
-			}
-			
 		}
 		showMatrixEqn(data, eqns, vars);
 	}
