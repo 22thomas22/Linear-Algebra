@@ -1,6 +1,6 @@
 ﻿  RowCalc.cpp
 C:\Users\Administrator\source\repos\Elementary Row Operations\Elementary Row Operations\RowCalc.cpp(20,15): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\Administrator\source\repos\Elementary Row Operations\Elementary Row Operations\RowCalc.cpp(122,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Administrator\source\repos\Elementary Row Operations\Elementary Row Operations\RowCalc.cpp(125,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   Elementary Row Operations.vcxproj -> C:\Users\Administrator\source\repos\Elementary Row Operations\x64\Debug\Elementary Row Operations.exe
   'pwsh.exe' is not recognized as an internal or external command,
   operable program or batch file.

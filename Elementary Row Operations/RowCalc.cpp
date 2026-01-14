@@ -58,6 +58,22 @@ bool toInt(const std::string& s) {
 	return stoi(s);
 }
 
+/**
+	* add 1 3: add row 1 to row 3 (row1→row1 + row3)
+	* sub 2 4: subtract row 2 from row 4 (row2→row2 + row4)
+	* mult div similar logic
+	* swap 2 3: switch rows 2 and 3 to take each others places
+	*  ---
+	* 1 mult 4: take row 1 and multiply by 4 (row1→row1 * 4)
+	* 2 div 4: take row 2 and divide by 4 (row2→row2 / 4)
+	*  ---
+	* Taken from textbook
+	*
+	*	(Replacement) Replace one row by the sum of itself and a multiple of another row.
+	*	(Interchange) Interchange two rows.
+	*	(Scaling) Multiply all entries in a row by a nonzero constant.
+	* **/
+
 int main() {
 	random_device rd;
 	mt19937 gen(rd());
@@ -73,32 +89,18 @@ int main() {
 
 	vector<vector<int>> data(eqns, vector<int>(vars));
 	// fill the array
-	for (int i = 0; i < eqns; i++) {
+	/*for (int i = 0; i < eqns; i++) {
 		for (int j = 0; j < vars; j++) {
 			data[i][j] = dist(gen);
 		}
-	}
-
+	}*/
+	data = {
+		{1, 2, 3, 4},
+		{5, 6, 7, 8},
+		{9, 10, 11, 12}
+	};
 	showMatrixEqn(data, eqns, vars);
 
-	
-
-	
-	/**
-	* add 1 3: add row 1 to row 3 (row1→row1 + row3)
-	* sub 2 4: subtract row 2 from row 4 (row2→row2 + row4)
-	* mult div similar logic
-	* swap 2 3: switch rows 2 and 3 to take each others places
-	*  --- 
-	* 1 mult 4: take row 1 and multiply by 4 (row1→row1 * 4)
-	* 2 div 4: take row 2 and divide by 4 (row2→row2 / 4)
-	*  ---
-	* Taken from textbook
-	* 
-    *	(Replacement) Replace one row by the sum of itself and a multiple of another row.
-	*	(Interchange) Interchange two rows.
-	*	(Scaling) Multiply all entries in a row by a nonzero constant.
-	* **/
 	string input;
 	bool end = false;
 	int count = 0;
@@ -106,6 +108,7 @@ int main() {
 	int firstRow;
 
 	while (!end) {
+		count = 0;
 		cout << "enter command: ";
 		getline(cin, input);
 		istringstream stream(input);
@@ -131,11 +134,12 @@ int main() {
 				cout << "bad row numbers\n";
 				continue;
 			}
+			first--; second--; // convert to 0-based index
 			// we are doing something between matricies, or swapping matricies
 			if (commands[0] == "swap") {
 				swap(data[first], data[second]);
 			} else {
-				for (int i = 0; i < eqns; i++) {
+				for (int i = 0; i < vars; i++) {
 					if (commands[0] == "add")
 						data[first][i] += data[second][i];
 					if(commands[0] == "sub")
