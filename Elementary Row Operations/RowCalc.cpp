@@ -64,6 +64,9 @@ bool toInt(const std::string& s) {
 	* mult div similar logic
 	* swap 2 3: switch rows 2 and 3 to take each others places
 	*  ---
+	* add 1 3 2: Copy row 3, multiply by 2, then add to row 1.
+	* sub 2 4 7: Copy row 4, multiply by 7, then subtract 2 from that.
+	*  ---
 	* 1 mult 4: take row 1 and multiply by 4 (row1→row1 * 4)
 	* 2 div 4: take row 2 and divide by 4 (row2→row2 / 4)
 	*  ---
@@ -83,7 +86,7 @@ int main() {
 	int vars, eqns; // x and y
 	cout << "variables: \n";
 	//cin >> vars; cout << endl; vars++; // add in for the right side of = sign
-	vars = 4;
+	vars = 3;
 	//cin.ignore();
 	eqns = vars - 1; // height spacing up/down, each one is an equation
 
@@ -95,9 +98,9 @@ int main() {
 		}
 	}*/
 	data = {
-		{1, 2, 3, 4},
-		{5, 6, 7, 8},
-		{9, 10, 11, 12}
+		{1, -4, 3, 0},
+		{5, -2, 3, -5},
+		{0, 3, -2, 6}
 	};
 	showMatrixEqn(data, eqns, vars);
 
@@ -113,7 +116,7 @@ int main() {
 		getline(cin, input);
 		istringstream stream(input);
 		while (stream >> commands[count++]) {}
-		if (isInt(commands[0], firstRow)) {
+		if (isInt(commands[0], firstRow)) { // then we are scaling a single row
 			firstRow--; // convert to 0-based index
 
 			// we are multiplying/dividing a matrix
@@ -124,11 +127,15 @@ int main() {
 			
 			float valueF = isMult ? (float)value : 1.0 / (float)value;
 
-			for (int i = 0; i < vars; i++) {
+			for (int i = 0; i < vars + 1; i++) {
 				data[firstRow][i] = (int)( (float)data[firstRow][i] * valueF );
 			}
 			
 		} else {
+			
+			if (commands[0] == "exit") {
+				exit(0);
+			}
 			int first, second;
 			if (!isInt(commands[1], first) || !isInt(commands[2], second)) {
 				cout << "bad row numbers\n";
@@ -139,11 +146,22 @@ int main() {
 			if (commands[0] == "swap") {
 				swap(data[first], data[second]);
 			} else {
-				for (int i = 0; i < vars; i++) {
+				int multFac = 1;
+				int attempt;
+				if (isInt(commands[3], attempt)) {
+					multFac = attempt;
+				}
+				for (int i = 0; i < vars + 1; i++) {
 					if (commands[0] == "add")
-						data[first][i] += data[second][i];
+						data[first][i] += (data[second][i] * multFac);
 					if(commands[0] == "sub")
-						data[first][i] -= data[second][i];
+						data[first][i] -= (data[second][i] * multFac);
+					if (commands[0] == "mult")
+						data[first][i] *= (data[second][i] * multFac);
+					if (commands[0] == "div") {
+						double tmp = 1.0 / (data[second][i] * multFac);
+						data[first][i] = (int)((double)data[first][i] * tmp);
+					}
 				}
 			}
 		}
